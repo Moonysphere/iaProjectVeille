@@ -1,4 +1,121 @@
-# 🤖 Agent CLI & Server
+
+
+```text
+                              .-----.
+                            /7  .  (
+                           /   .-.  \
+                          /   /   \  \
+                         / `  )   (   )
+                        / `   )   ).  \
+                      .'  _.   \_/  . |
+     .--.           .' _.' )`.        |
+    (    `---...._.'   `---.'_)    ..  \
+     \            `----....___    `. \  |
+      `.           _ ----- _   `._  )/  |
+        `.       /"  \   /"  \`.  `._   |
+          `.    ((O)` ) ((O)` ) `.   `._\
+            `-- '`---'   `---' )  `.    `-.
+               /                  ` \      `-.
+             .'                      `.       `.
+            /                     `  ` `.       `-.
+     .--.   \ ===._____.======. `    `   `. .___.--`     .''''.
+    ' .` `-. `.                )`. `   ` ` \          .' . '  8)
+   (8  .  ` `-.`.               ( .  ` `  .`\      .'  '    ' /
+    \  `. `    `-.               ) ` .   ` ` \  .'   ' .  '  /
+     \ ` `.  ` . \`.    .--.     |  ` ) `   .``/   '  // .  /
+      `.  ``. .   \ \   .-- `.  (  ` /_   ` . / ' .  '/   .'
+        `. ` \  `  \ \  '-.   `-'  .'  `-.  `   .  .'/  .'
+          \ `.`.  ` \ \    ) /`._.`       `.  ` .  .'  /
+    LGB    |  `.`. . \ \  (.'               `.   .'  .'
+        __/  .. \ \ ` ) \                     \.' .. \__
+ .-._.-'     '"  ) .-'   `.                   (  '"     `-._.--.
+(_________.-====' / .' /\_)`--..__________..-- `====-. _________)
+                 (.'(.'
+
+                    HEY, I'M TIMI!
+                 TECHNOLOGY WATCH AGENT
+```
+
+## 🐸 Timi — Agent de veille technologique
+
+**Timi** est un agent d’intelligence artificielle spécialisé dans la **recherche d’informations** et la **veille technologique**.
+
+Son objectif est de surveiller, collecter, vérifier et synthétiser des informations provenant de différentes sources afin de faire ressortir les éléments réellement importants.
+
+Timi peut notamment :
+
+* rechercher des informations techniques et technologiques ;
+* suivre les évolutions d’un sujet dans le temps ;
+* consulter des sources externes grâce à ses tools ;
+* analyser des articles, des flux RSS et des documents ;
+* identifier les nouveautés, tendances et changements importants ;
+* supprimer les doublons entre plusieurs sources ;
+* résumer des contenus longs ;
+* classer les informations par thème et par niveau de pertinence ;
+* conserver le contexte d’une conversation ;
+* générer une synthèse de veille claire et structurée.
+
+L’agent s’appuie sur une architecture locale composée de :
+
+* **Gemma 4** comme modèle de langage ;
+* **LM Studio** pour exécuter et exposer le modèle localement ;
+* **LangChain / LangGraph** pour orchestrer l’agent et ses tools ;
+* **Express** pour exposer l’agent sous forme d’API ;
+* une **CLI** et une future interface React pour interagir avec Timi.
+
+### Fonctionnement général
+
+```text
+Sources de veille
+      ↓
+Tools de recherche et de lecture
+      ↓
+Agent Timi
+      ↓
+Gemma 4 dans LM Studio
+      ↓
+Analyse, tri et synthèse
+      ↓
+CLI ou interface web
+```
+
+## 🧠 Choix du modèle Gemma 4
+
+La lettre **B** indique le nombre de paramètres du modèle en milliards.
+
+Exemples :
+
+* `4B` représente environ 4 milliards de paramètres ;
+* `12B` représente environ 12 milliards de paramètres ;
+* `31B` représente environ 31 milliards de paramètres.
+
+En règle générale, un modèle plus grand produit de meilleures analyses, mais demande davantage de mémoire et répond moins rapidement.
+
+Gemma 4 existe notamment en versions **E2B**, **E4B**, **12B**, **26B-A4B MoE** et **31B**. Les modèles E2B et E4B sont optimisés pour les appareils légers, tandis que les modèles 12B, 26B et 31B ciblent davantage les ordinateurs portables puissants et les stations de travail.
+
+### Configuration matérielle indicative
+
+Les valeurs suivantes correspondent principalement à une utilisation locale dans LM Studio avec une version quantifiée en **Q4**. Elles incluent une marge pour LM Studio, le système d’exploitation et le cache de contexte.
+
+| Modèle          |                      Paramètres |    Mémoire minimale indicative | Configuration recommandée                      | Usage conseillé                                         |
+| --------------- | ------------------------------: | -----------------------------: | ---------------------------------------------- | ------------------------------------------------------- |
+| Gemma 4 E2B     |                  2,3B effectifs | 4 Go de RAM ou mémoire unifiée | 8 Go de RAM                                    | Tests, appareils légers, classification simple          |
+| Gemma 4 E4B     |                  4,5B effectifs |                    8 Go de RAM | 12 à 16 Go de RAM                              | Veille légère, résumés, extraction de données           |
+| Gemma 4 12B     |                          11,95B |           16 Go de RAM ou VRAM | 24 Go de mémoire unifiée ou 16 Go de VRAM      | Agent local équilibré, tools, analyse et synthèse       |
+| Gemma 4 26B-A4B | 26B au total, environ 4B actifs |           24 Go de RAM ou VRAM | 32 Go de mémoire unifiée ou 24 Go de VRAM      | Veille avancée, raisonnement et workflows agentiques    |
+| Gemma 4 31B     |                           30,7B |      24 à 32 Go de RAM ou VRAM | 48 à 64 Go de mémoire unifiée ou 32 Go de VRAM | Analyse complexe, meilleure qualité, station de travail |
+
+> Ces configurations sont des estimations pour des modèles quantifiés. Une version non quantifiée peut demander plusieurs fois plus de mémoire.
+
+Google indique que Gemma 4 12B est conçu pour fonctionner localement avec environ **16 Go de RAM, de VRAM ou de mémoire unifiée**.
+
+Les poids non quantifiés occupent environ **24 Go pour le modèle 12B** et environ **62,6 Go pour le modèle 31B**.
+
+Google propose également des versions Gemma 4 optimisées par **Quantization-Aware Training**, notamment au format Q4, afin de réduire fortement les besoins en mémoire. La version E2B optimisée peut descendre autour de 1 Go dans certaines configurations mobiles spécialisées.
+
+
+
+## Agent CLI & Server
 
 Un CLI et serveur JavaScript/TypeScript pour tester et interagir avec des agents IA.
 
